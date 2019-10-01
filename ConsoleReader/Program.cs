@@ -39,28 +39,33 @@ namespace ConsoleReader
         public static async void Run( )
         {
           
-                IParser<CityUrl> mainPageParser = new GismeteoMainPageParser();
+                IParser<City> mainPageParser = new GismeteoMainPageParser();
                 IParserSettings mainPageParserSettings = new GismeteoSettings();
+                ParserWorker<City> mainPageWorker = new ParserWorker<City>(mainPageParserSettings, mainPageParser);
+                IEnumerable<City> lst = await mainPageWorker.DoWork();
 
-                ParserWorker<CityUrl> mainPageWorker = new ParserWorker<CityUrl>(mainPageParserSettings, mainPageParser);
-                IEnumerable<CityUrl> lst = await mainPageWorker.DoWork();
+                CityRepository cityRepository = new CityRepository();
+                cityRepository.AddItems(lst);
 
+              
 
+                IEnumerable<City> citiesinDb = cityRepository.GetItems();
                 List<CityWeather> citiesWeather = new List<CityWeather>();
-                foreach (CityUrl item in lst)
+            foreach (City city in citiesinDb)
                 {
-                    IParser<CityWeather> weatherParser = new GismeteoWeatherPageParser(item);
+                    IParser<CityWeather> weatherParser = new GismeteoWeatherPageParser(city);
                     IParserSettings weatherParserSettings = new GismeteoSettings();
-                    weatherParserSettings.targetUrlPart = item.url;
+                    weatherParserSettings.targetUrlPart = city.url;
 
                     ParserWorker<CityWeather> pageWorker = new ParserWorker<CityWeather>(weatherParserSettings, weatherParser);
                     IEnumerable<CityWeather> temp = await pageWorker.DoWork();
+                
                     citiesWeather.AddRange(temp);
 
                 }
             //  Thread.Sleep(1000);
             WeatherRepository repository = new WeatherRepository();
-            repository.AddWeatherList(citiesWeather);
+            repository.AddItems(citiesWeather);
             Console.WriteLine("OK");
         }
     }

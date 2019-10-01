@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace ConsoleReader.Core.DBClasses
 {
-    interface IRepository
+    interface IRepository<T> where T:class
     {
-         void AddWeatherList(IEnumerable<CityWeather> citiesWeather);
+         void AddItems(IEnumerable<T> citiesWeather);
     }
 }

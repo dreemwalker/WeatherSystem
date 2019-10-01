@@ -8,34 +8,42 @@ using AngleSharp.Dom;
 using System.Threading.Tasks;
 namespace ConsoleReader.Core.Gismeteo
 {
-    class GismeteoMainPageParser : IParser<CityUrl>
+    class GismeteoMainPageParser : IParser<City>
     {
        
-        private CityUrl GetCurrentCityUrl(IHtmlDocument document)
+        private City GetCurrentCityUrl(IHtmlDocument document)
         {
 
             var currentCity = document.QuerySelectorAll("a").Where(item => item.ClassName != null &&item.ClassName == "link blue weather_current_link no_border");
          //   CityUrl cityUrl = new CityUrl(currentCity.First().TextContent, currentCity.First().GetAttribute("href"));
             string cityName = currentCity.First().TextContent;
             string cityUrl = currentCity.First().GetAttribute("href");
-            return new CityUrl(cityName,cityUrl) ;
+
+            City current = new City();
+            current.name = cityName;
+            current.url = cityUrl;
+            return current;
         }
      
 
-        public IEnumerable<CityUrl> Parse(IHtmlDocument document)
+        public IEnumerable<City> Parse(IHtmlDocument document)
         {
-            var list = new List<CityUrl>();
+            var list = new List<City>();
             list.Add(GetCurrentCityUrl(document));
-
-          
             var items = document.QuerySelectorAll("#noscript a");
-
-            //var hrefList = divContent.Descendents().Where(tag => tag.NodeName == "div");
 
             foreach (var item in items)
             {
-                list.Add(new CityUrl(item.GetAttribute("data-name"),  item.GetAttribute("href")));
+                string cityName= item.GetAttribute("data-name");
+                if (list.FirstOrDefault(p => p.name == cityName) == null)
+                {
+                    City tempCity = new City();
+                    tempCity.name = cityName;
+                    tempCity.url = item.GetAttribute("href");
+                    list.Add(tempCity);
+                }
             }
+           
             return list;
         }
     }

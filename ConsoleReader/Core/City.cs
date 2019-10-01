@@ -6,14 +6,17 @@ using System.Threading.Tasks;
 
 namespace ConsoleReader.Core
 {
-    public class CityUrl
+    public class City
     {
+        public int Id { get; set; }
+  
         public string url { get; set; }
         public string name { get; set; }
-        public CityUrl(string cityName, string cityUrl)
-        {
-            name = cityName;
-            url = cityUrl;
-        }
+
+        //public City(string cityName, string cityUrl)
+        //{
+        //    name = cityName;
+        //    url = cityUrl;
+        //}
     }
 }

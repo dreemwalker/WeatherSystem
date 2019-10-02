@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MySql.Data.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 namespace ConsoleReader.Core.DBClasses
 {
     class MySqlContext:DbContext
@@ -14,7 +9,8 @@ namespace ConsoleReader.Core.DBClasses
         public DbSet<City> cities { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("server=localhost;port=3306;UserId=root;Password=root;database=weathersystem;Charset=utf8;");
+            optionsBuilder.UseMySQL(ConfigurationManager.ConnectionStrings["MySqlConnectionString"].ConnectionString);
         }
+        
     }
 }

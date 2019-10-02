@@ -13,14 +13,16 @@ namespace ConsoleReader
     class Program
     {
         private static System.Timers.Timer aTimer;
-        private static bool locker=false;
+        private static UserActionsLocker exitLocker;
         static void Main(string[] args)
         {
+           
+            exitLocker = new UserActionsLocker();
             SetTimer();
             while (true)
             {
                 Console.ReadLine();
-                if (!locker)
+                if (!exitLocker.GetState())
                 {
                    
                     aTimer.Stop();
@@ -38,60 +40,25 @@ namespace ConsoleReader
         }
         private static void SetTimer()
         {
-            Run();
+          
+           // Run();
             aTimer = new System.Timers.Timer(300000);
             aTimer.Elapsed += OnTimedEvent;
             aTimer.AutoReset = true;
             aTimer.Enabled = true;
+
+            ApplicationWorker applicationWorker = new ApplicationWorker(exitLocker);
+            applicationWorker.Run();
+
             aTimer.Start();
         }
 
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
-            Run();
-        }
-      
-        public static async void Run( )
-        {
-            locker = true;
-
-            ConsoleLogger.Log("Updating weather...");
-
-            IParser<City> mainPageParser = new GismeteoMainPageParser();
-            IParserSettings mainPageParserSettings = new GismeteoSettings();
-            ParserWorker<City> mainPageWorker = new ParserWorker<City>(mainPageParserSettings, mainPageParser);
-            ConsoleLogger.Log("Load cities...");
-
-            IEnumerable<City> lst = await mainPageWorker.DoWork();
-
-            CityRepository cityRepository = new CityRepository();
-
-            ConsoleLogger.Log("Check cities...");
-            cityRepository.AddItems(lst);
-            
-            IEnumerable<City> citiesinDb = cityRepository.GetItems();
-            List<CityWeather> citiesWeather = new List<CityWeather>();
-
-            ConsoleLogger.Log("Load weather...");
-            foreach (City city in citiesinDb)
-                {
-                    IParser<CityWeather> weatherParser = new GismeteoWeatherPageParser(city);
-                    IParserSettings weatherParserSettings = new GismeteoSettings();
-                    weatherParserSettings.targetUrlPart = city.url;
-
-                    ParserWorker<CityWeather> pageWorker = new ParserWorker<CityWeather>(weatherParserSettings, weatherParser);
-                    IEnumerable<CityWeather> temp =await  pageWorker.DoWork();
-                
-                    citiesWeather.AddRange(temp);
-
-                }
+            ApplicationWorker applicationWorker = new ApplicationWorker(exitLocker);
+            applicationWorker.Run();
          
-            WeatherRepository repository = new WeatherRepository();
-
-            ConsoleLogger.Log("Saving weather...");
-            repository.AddItems(citiesWeather);
-            Console.WriteLine("Done");
-            locker = false;
         }
+     
     }
 }

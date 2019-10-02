@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 namespace WeatherService
 {
     class MySqlContext:DbContext
@@ -15,7 +16,8 @@ namespace WeatherService
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySQL("server=localhost;port=3306;UserId=root;Password=root;database=weathersystem;Charset=utf8;");
+            optionsBuilder.UseMySQL(ConfigurationManager.ConnectionStrings["MySqlConnectionString"].ConnectionString);
+            // optionsBuilder.UseMySQL("server=localhost;port=3306;UserId=root;Password=root;database=weathersystem;Charset=utf8;");
         }
     }
 }

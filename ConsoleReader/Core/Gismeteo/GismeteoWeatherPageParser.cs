@@ -1,9 +1,7 @@
-﻿using System;
+﻿using AngleSharp.Html.Dom;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AngleSharp.Html.Dom;
 
 namespace ConsoleReader.Core.Gismeteo
 {
@@ -17,15 +15,25 @@ namespace ConsoleReader.Core.Gismeteo
 
         public IEnumerable<CityWeather> Parse(IHtmlDocument document)
         {
+           
+                var weather = new List<CityWeather>();
+                CityWeather temp = new CityWeather();
+                if (document != null)
+                {
+                    //current/tomorrow temperature
+                    var wholeTemperature = document.QuerySelectorAll("div.js_meas_container .unit_temperature_c .js_value").First().TextContent;//current
+                                                                                                                                                //var wholeTemperature = document.QuerySelectorAll("a.nolink  .unit_temperature_c").Last().TextContent;//tomorrow
 
-            var weather = new List<CityWeather>();
-            CityWeather temp = new CityWeather();
-            var wholeTemperature = document.QuerySelectorAll("div.js_meas_container .unit_temperature_c .js_value").First().TextContent;
-            //var fractionTemperature = document.QuerySelectorAll("div.js_meas_container .unit_temperature_c .tab-weather__value_m").First().TextContent;
-            temp.currentTemp = wholeTemperature.Trim(' ','\n');
-            temp.cityId = _cityInfo.Id;
-            temp.date = DateTime.Now;
-            weather.Add(temp);
+                    temp.currentTemp = wholeTemperature.Trim(' ', '\n');
+                    temp.cityId = _cityInfo.Id;
+                    temp.date = DateTime.Now;
+                    weather.Add(temp);
+                }
+                else
+                {
+                    ConsoleLogger.Error("Empty document", this);
+                }
+            
             return weather;
         }
     }

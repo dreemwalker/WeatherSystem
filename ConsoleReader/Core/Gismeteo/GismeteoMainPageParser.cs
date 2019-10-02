@@ -1,11 +1,8 @@
 ﻿
+using AngleSharp.Html.Dom;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using AngleSharp.Html.Dom;
-using AngleSharp.Dom;
-using System.Threading.Tasks;
 namespace ConsoleReader.Core.Gismeteo
 {
     class GismeteoMainPageParser : IParser<City>
@@ -15,7 +12,6 @@ namespace ConsoleReader.Core.Gismeteo
         {
 
             var currentCity = document.QuerySelectorAll("a").Where(item => item.ClassName != null &&item.ClassName == "link blue weather_current_link no_border");
-         //   CityUrl cityUrl = new CityUrl(currentCity.First().TextContent, currentCity.First().GetAttribute("href"));
             string cityName = currentCity.First().TextContent;
             string cityUrl = currentCity.First().GetAttribute("href");
 
@@ -24,26 +20,43 @@ namespace ConsoleReader.Core.Gismeteo
             current.url = cityUrl;
             return current;
         }
-     
+
 
         public IEnumerable<City> Parse(IHtmlDocument document)
         {
             var list = new List<City>();
-            list.Add(GetCurrentCityUrl(document));
-            var items = document.QuerySelectorAll("#noscript a");
 
-            foreach (var item in items)
+            if (document != null)
             {
-                string cityName= item.GetAttribute("data-name");
-                if (list.FirstOrDefault(p => p.name == cityName) == null)
+                list.Add(GetCurrentCityUrl(document));
+                var items = document.QuerySelectorAll("#noscript a");
+
+                try
                 {
-                    City tempCity = new City();
-                    tempCity.name = cityName;
-                    tempCity.url = item.GetAttribute("href");
-                    list.Add(tempCity);
+                    foreach (var item in items)
+                    {
+
+                        string cityName = item.GetAttribute("data-name");
+
+                        if (list.FirstOrDefault(p => p.name == cityName) == null)
+                        {
+                            City tempCity = new City();
+                            tempCity.name = cityName;
+                            tempCity.url = item.GetAttribute("href");
+                            list.Add(tempCity);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    ConsoleLogger.Error("Parse Error :" + e.Message, this);
                 }
             }
-           
+
+            else
+            {
+                ConsoleLogger.Error("Empty document", this );
+            }
             return list;
         }
     }

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleReader.Core
 {
-  public static  class ConsoleLogger
+    public static  class ConsoleLogger
     {
         static public void Error(string message, object sender)
         {

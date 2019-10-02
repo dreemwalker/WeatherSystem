@@ -22,7 +22,7 @@ namespace ConsoleReader.Core.Gismeteo
                 {
                     //current/tomorrow temperature
                     var wholeTemperature = document.QuerySelectorAll("div.js_meas_container .unit_temperature_c .js_value").First().TextContent;//current
-                                                                                                                                                //var wholeTemperature = document.QuerySelectorAll("a.nolink  .unit_temperature_c").Last().TextContent;//tomorrow
+                     //var wholeTemperature = document.QuerySelectorAll("a.nolink  .unit_temperature_c").Last().TextContent;//tomorrow
 
                     temp.currentTemp = wholeTemperature.Trim(' ', '\n');
                     temp.cityId = _cityInfo.Id;

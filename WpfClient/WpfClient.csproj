@@ -65,6 +65,7 @@
     <Compile Include="Models\JsonHttpClient.cs" />
     <Compile Include="Models\WeatherWorker.cs" />
     <Compile Include="ViewModels\CityViewModel.cs" />
+    <Compile Include="ViewModels\WeatherItemViewModel.cs" />
     <Compile Include="ViewModels\WeatherViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

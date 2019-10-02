@@ -6,11 +6,18 @@
         xmlns:local="clr-namespace:WpfClient"
         xmlns:ViewModels="clr-namespace:WpfClient.ViewModels" x:Class="WpfClient.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="690">
+        Title="Gismeteo Weather Client" Height="450" Width="690">
     <Grid>
-        <ComboBox x:Name="citiesList" Height="22" VerticalAlignment="Top" Margin="23,24,499,0" SelectionChanged="CitiesList_SelectionChanged"/>
+        <ComboBox x:Name="citiesList" 
+                  Height="27" 
+                  VerticalAlignment="Top" 
+                  Margin="176,66,299,0" 
+                  SelectionChanged="CitiesList_SelectionChanged"
+                  
+                  IsSynchronizedWithCurrentItem="True"
+                />
 
-        <ListView x:Name="weatherList" Margin="214,10,108,31">
+        <ListView x:Name="weatherList" Margin="429,35,10,31">
             <ListView.View>
                 <GridView>
                     <GridViewColumn DisplayMemberBinding="{Binding city}"  Width="100" Header="Город"/>
@@ -19,5 +26,15 @@
                 </GridView>
             </ListView.View>
         </ListView>
+        <TextBlock x:Name="CurrentCityWeather" 
+                   TextAlignment="Center" 
+                   HorizontalAlignment="Left" 
+                   Margin="10,145,0,0" 
+                   TextWrapping="Wrap" Text="{Binding checkedCityWeather.CityName}"
+                   VerticalAlignment="Top" 
+                   Height="125" 
+                   Width="414" 
+                   FontSize="36"/>
+        <Label Content="Погода в городе" HorizontalAlignment="Left" Margin="50,66,0,0" VerticalAlignment="Top" Width="107" Height="27"/>
     </Grid>
 </Window>

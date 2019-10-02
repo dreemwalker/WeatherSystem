@@ -145,6 +145,7 @@
   <ItemGroup>
     <Compile Include="Core\City.cs" />
     <Compile Include="Core\CityWeather.cs" />
+    <Compile Include="Core\ConsoleLogger.cs" />
     <Compile Include="Core\DBClasses\CityRepository.cs" />
     <Compile Include="Core\DBClasses\WeatherRepository.cs" />
     <Compile Include="Core\DBClasses\IRepository.cs" />

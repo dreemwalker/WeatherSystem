@@ -32,7 +32,7 @@ namespace WpfClient.Models
         }
         public async Task<WeatherViewModel> GetCityWeather(int cityId)
         {
-            WeatherViewModel weatherViewModel = new WeatherViewModel();
+           
             var cityWeather = await client.GetCityWeather(cityId);
           
             WeatherViewModel tempWeatherVm = new WeatherViewModel()
@@ -41,7 +41,7 @@ namespace WpfClient.Models
                 value = cityWeather.currentTemp
             };
 
-            return weatherViewModel;
+            return tempWeatherVm;
         }
         public async Task<List<WeatherViewModel>> GetAllWeatherItems()
         {
